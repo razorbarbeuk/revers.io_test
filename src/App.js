@@ -27,10 +27,10 @@ export default function App() {
         if (res.ok) {
           return res.json()
         }
-        return res
+        throw res
       })
       .then((data) => setList(data))
-      .catch((err) => setError(err))
+      .catch((err) => setError(new Error(err)))
       .finally((_) => setLoading(false))
   }
 
@@ -44,7 +44,7 @@ export default function App() {
     return <>loading...</>
   }
   if(error) {
-    return <>error</>
+    return <>{error.message}</>
   }
 
   return (
