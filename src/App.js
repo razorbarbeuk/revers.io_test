@@ -11,12 +11,15 @@ import "./styles.css"
 
 // bonus: use an input to research an other query
 
+const DEFAULT_URL = new URL('https://api-adresse.data.gouv.fr/search/?q=8+bd+du+port')
+const DEFAULT_QUERY = DEFAULT_URL.searchParams.get('q')
+
 export default function App() {
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState(null)
   const [error, setError] = useState(null)
-  const url = new URL('https://api-adresse.data.gouv.fr/search/?q=8+bd+du+port')
-  const query = url.searchParams.get('q')
+  const [url, setUrl] = useState(DEFAULT_URL)
+  const [search, setSearch] = useState(DEFAULT_QUERY)
 
   const fetch_address = async (url) => {
     setLoading(true)
@@ -25,6 +28,7 @@ export default function App() {
     })
       .then((res) => {
         if (res.ok) {
+          setError(null)
           return res.json()
         }
         throw res
@@ -36,16 +40,21 @@ export default function App() {
 
   const compute_score = (number) => `${Math.round(number*100)} %`
 
-  useEffect(() => {
-    fetch_address(url)
-  }, [])
+  const handle_value = (event) => {
+    const value = event.target.value
+    const new_param = new URLSearchParams(url.search)
+    new_param.set('q', value)
+    const new_url = new URL(`${url.origin}${url.pathname}?${new_param}`)
+    setSearch(value)
+    setUrl(new_url)
+  }
 
-  if (loading) {
-    return <>loading...</>
-  }
-  if(error) {
-    return <>{error.message}</>
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetch_address(url)
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [ url ])
 
   return (
     <div className="App">
@@ -53,10 +62,15 @@ export default function App() {
       <ul>
         <li>
           {url &&
-            <h2>Label: {query}</h2>
+            <div style={{ marginBottom: "10px" }}>
+              <h2>Label: {search}</h2>
+            </div>
           }
+          <input type="text" value={search} onChange={handle_value} />
           <ul>
-            {list &&
+            {loading && <div style={{ marginBottom: "10px" }}>loading...</div>}
+            {error && <div style={{ marginBottom: "10px" }}>{error.message}</div>}
+            {(!loading && !error && list) &&
               list.features.map((address) => {
                 return (
                   <div key={address.properties.label} style={{ marginBottom: "10px" }}>
