@@ -1,2 +1,4 @@
 # revers.io_test
-Created with CodeSandbox
+
+Pour lancer l'app avec l'api de lancé en amont  
+`yarn && yarn run start`
