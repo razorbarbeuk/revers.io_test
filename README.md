@@ -1,4 +1,4 @@
 # revers.io_test
 
-Pour lancer l'app avec l'api de lancé en amont  
+Pour lancer l'app
 `yarn && yarn run start`
