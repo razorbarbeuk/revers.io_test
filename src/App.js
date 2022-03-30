@@ -70,8 +70,8 @@ export default function App() {
         {(!loading && !error && list) &&
           <ul>
             {list.features.map((address) => (
-              <li>
-                <div key={address.properties.label} style={{ marginBottom: "20px" }}>
+              <li key={address.properties.label}>
+                <div style={{ marginBottom: "20px" }}>
                   <p>number: {address.properties.housenumber}</p>
                   <p>street: {address.properties.street}</p>
                   <p>city: {address.properties.city}</p>
