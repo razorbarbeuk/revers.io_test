@@ -59,33 +59,30 @@ export default function App() {
   return (
     <div className="App">
       <h1>Addresse list</h1>
-      <ul>
-        <li>
-          {url &&
-            <div style={{ marginBottom: "10px" }}>
-              <h2>Label: {search}</h2>
-            </div>
-          }
-          <input type="text" value={search} onChange={handle_value} />
+        {search &&
+          <div style={{ marginBottom: "10px" }}>
+            <h2>Label: {search}</h2>
+          </div>
+        }
+        <input type="text" value={search} onChange={handle_value} />
+        {loading && <div style={{ marginBottom: "10px" }}>loading...</div>}
+        {error && <div style={{ marginBottom: "10px" }}>{error.message}</div>}  
+        {(!loading && !error && list) &&
           <ul>
-            {loading && <div style={{ marginBottom: "10px" }}>loading...</div>}
-            {error && <div style={{ marginBottom: "10px" }}>{error.message}</div>}
-            {(!loading && !error && list) &&
-              list.features.map((address) => {
-                return (
-                  <div key={address.properties.label} style={{ marginBottom: "10px" }}>
-                    <li>number: {address.properties.housenumber}</li>
-                    <li>street: {address.properties.street}</li>
-                    <li>city: {address.properties.city}</li>
-                    <li>zipcode: {address.properties.citycode}</li>
-                    <li>country: France</li>
-                    <li>rounded score: {compute_score(address.properties.score)}</li>
-                  </div>
-                )
-              })}
+            {list.features.map((address) => (
+              <li>
+                <div key={address.properties.label} style={{ marginBottom: "20px" }}>
+                  <p>number: {address.properties.housenumber}</p>
+                  <p>street: {address.properties.street}</p>
+                  <p>city: {address.properties.city}</p>
+                  <p>zipcode: {address.properties.citycode}</p>
+                  <p>country: France</p>
+                  <p>rounded score: {compute_score(address.properties.score)}</p>
+                </div>
+              </li>
+            ))}
           </ul>
-        </li>
-      </ul>
+        }
     </div>
   )
 }
